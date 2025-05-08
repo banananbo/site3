@@ -1,7 +1,7 @@
 ## 基本設定
 api:
   dashboard: true
-  insecure: false
+  insecure: true
 
 # Dockerプロバイダーの設定
 providers:
@@ -31,6 +31,8 @@ certificatesResolvers:
 # アクセスログとエラーログ
 log:
   level: "DEBUG"
+
+accessLog: {}
 
 # Prometheusメトリクス
 metrics:

@@ -13,10 +13,10 @@ services:
       - app-network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.frontend.rule=Host(`banananbo.com`,`www.banananbo.com`)"
-      - "traefik.http.routers.frontend.entrypoints=websecure"
-      - "traefik.http.routers.frontend.tls=true"
-      - "traefik.http.routers.frontend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.frontend.rule=Host(`banananbo.com`) || Host(`www.banananbo.com`)"
+      - "traefik.http.routers.frontend.entrypoints=websecure,web"
+      - "traefik.http.routers.frontend-http.rule=Host(`banananbo.com`) || Host(`www.banananbo.com`)"
+      - "traefik.http.routers.frontend-http.entrypoints=web"
 
   backend:
     build:
@@ -33,9 +33,9 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`api.banananbo.com`)"
-      - "traefik.http.routers.backend.entrypoints=websecure"
-      - "traefik.http.routers.backend.tls=true"
-      - "traefik.http.routers.backend.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.backend.entrypoints=websecure,web"
+      - "traefik.http.routers.backend-http.rule=Host(`api.banananbo.com`)"
+      - "traefik.http.routers.backend-http.entrypoints=web"
 
   db:
     image: mysql:8.0
@@ -59,9 +59,9 @@ services:
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.adminer.rule=Host(`admin.banananbo.com`)"
-      - "traefik.http.routers.adminer.entrypoints=websecure"
-      - "traefik.http.routers.adminer.tls=true"
-      - "traefik.http.routers.adminer.tls.certresolver=letsencrypt"
+      - "traefik.http.routers.adminer.entrypoints=websecure,web"
+      - "traefik.http.routers.adminer-http.rule=Host(`admin.banananbo.com`)"
+      - "traefik.http.routers.adminer-http.entrypoints=web"
 
   traefik:
     image: traefik:v2.10
@@ -78,6 +78,10 @@ services:
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
       - "--log.level=DEBUG"
+      - "--accesslog=true"
+      - "--accesslog.fields.headers.names.User-Agent=keep"
+      - "--accesslog.fields.headers.names.Authorization=keep"
+      - "--accesslog.fields.headers.names.Content-Type=keep"
     ports:
       - "80:80"
       - "443:443"
@@ -93,11 +97,9 @@ services:
       - "traefik.enable=true"
       - "traefik.http.routers.dashboard.rule=Host(`traefik.banananbo.com`)"
       - "traefik.http.routers.dashboard.service=api@internal"
-      - "traefik.http.routers.dashboard.entrypoints=websecure"
-      - "traefik.http.routers.dashboard.tls=true"
-      - "traefik.http.routers.dashboard.tls.certresolver=letsencrypt"
-      - "traefik.http.routers.dashboard.middlewares=auth"
-      - "traefik.http.middlewares.auth.basicauth.users=${TRAEFIK_AUTH}"
+      - "traefik.http.routers.dashboard.entrypoints=websecure,web"
+      - "traefik.http.routers.dashboard-http.rule=Host(`traefik.banananbo.com`)"
+      - "traefik.http.routers.dashboard-http.entrypoints=web"
 
   # nginx:
   #   image: nginx:alpine
