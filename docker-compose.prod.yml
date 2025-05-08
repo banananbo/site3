@@ -12,6 +12,7 @@ services:
     networks:
       - app-network
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.frontend.rule=Host(`banananbo.com`,`www.banananbo.com`)"
       - "traefik.http.routers.frontend.entrypoints=websecure"
       - "traefik.http.routers.frontend.tls=true"
@@ -30,6 +31,7 @@ services:
     networks:
       - app-network
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.backend.rule=Host(`api.banananbo.com`)"
       - "traefik.http.routers.backend.entrypoints=websecure"
       - "traefik.http.routers.backend.tls=true"
@@ -55,6 +57,7 @@ services:
     networks:
       - app-network
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.adminer.rule=Host(`admin.banananbo.com`)"
       - "traefik.http.routers.adminer.entrypoints=websecure"
       - "traefik.http.routers.adminer.tls=true"
@@ -68,13 +71,13 @@ services:
       - "--providers.docker=true"
       - "--providers.docker.exposedbydefault=false"
       - "--entrypoints.web.address=:80"
-      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
-      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
       - "--entrypoints.websecure.address=:443"
       - "--certificatesresolvers.letsencrypt.acme.email=${ACME_EMAIL}"
       - "--certificatesresolvers.letsencrypt.acme.storage=/etc/traefik/acme/acme.json"
+      - "--certificatesresolvers.letsencrypt.acme.caserver=https://acme-staging-v02.api.letsencrypt.org/directory"
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge=true"
       - "--certificatesresolvers.letsencrypt.acme.httpchallenge.entrypoint=web"
+      - "--log.level=DEBUG"
     ports:
       - "80:80"
       - "443:443"
@@ -87,6 +90,7 @@ services:
     networks:
       - app-network
     labels:
+      - "traefik.enable=true"
       - "traefik.http.routers.dashboard.rule=Host(`traefik.banananbo.com`)"
       - "traefik.http.routers.dashboard.service=api@internal"
       - "traefik.http.routers.dashboard.entrypoints=websecure"
