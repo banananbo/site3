@@ -1,0 +1,64 @@
+# 環境変数
+.env
+.env.*
+!.env.example
+!.env.prod.example
+
+# Traefik関連
+/traefik/acme/*
+!/traefik/acme/.gitkeep
+
+# バックエンド
+/backend/build/
+/backend/out/
+/backend/.gradle/
+/backend/bin/
+/backend/.settings/
+/backend/.classpath
+/backend/.project
+/backend/*.iml
+/backend/*.ipr
+/backend/*.iws
+/backend/.idea/
+/backend/HELP.md
+/backend/.DS_Store
+/backend/logs/
+
+# フロントエンド
+/frontend/node_modules/
+/frontend/build/
+/frontend/dist/
+/frontend/coverage/
+/frontend/.pnp
+/frontend/.pnp.js
+/frontend/.DS_Store
+/frontend/.env.local
+/frontend/.env.development.local
+/frontend/.env.test.local
+/frontend/.env.production.local
+/frontend/npm-debug.log*
+/frontend/yarn-debug.log*
+/frontend/yarn-error.log*
+
+# Docker関連
+*.log
+.docker-volumes/
+
+# データベースバックアップ
+backup_*.sql
+
+# OS関連
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# IDEs
+.idea/
+.vscode/
+*.code-workspace
+.project
+.classpath
+.c9/
+*.launch
+.settings/ 

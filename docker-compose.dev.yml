@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+  frontend:
+    build:
+      args:
+        - NODE_ENV=development
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - REACT_APP_API_URL=http://api.lvh.me
+    ports:
+      - "3000:3000"
+    entrypoint: ["npm", "start"]
+    labels:
+      - "traefik.http.routers.frontend.rule=Host(`lvh.me`)"
+      - "traefik.http.services.frontend.loadbalancer.server.port=3000"
+
+  backend:
+    build:
+      args:
+        - SPRING_PROFILES_ACTIVE=development
+    volumes:
+      - ./backend:/app
+      - ~/.m2:/root/.m2
+    environment:
+      - SPRING_PROFILES_ACTIVE=development
+    ports:
+      - "8081:8081"
+    entrypoint: ["gradle", "bootRun"]
+    labels:
+      - "traefik.http.routers.backend.rule=Host(`api.lvh.me`)"
+      - "traefik.http.services.backend.loadbalancer.server.port=8081"
+
+  db:
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=app_db
+      - MYSQL_USER=app_user
+      - MYSQL_PASSWORD=app_password
+      - MYSQL_ROOT_PASSWORD=root_password
+      - MYSQL_ALLOW_EMPTY_PASSWORD=true
+
+  adminer:
+    ports:
+      - "8082:8080"
+    labels:
+      - "traefik.http.routers.adminer.rule=Host(`adminer.lvh.me`)"
+      - "traefik.http.services.adminer.loadbalancer.server.port=8080"
+
+  traefik:
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro 

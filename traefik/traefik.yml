@@ -1,0 +1,26 @@
+## 基本設定
+api:
+  dashboard: true
+
+# Dockerプロバイダーの設定
+providers:
+  docker:
+    endpoint: "unix:///var/run/docker.sock"
+    exposedByDefault: false
+  file:
+    filename: /etc/traefik/dynamic_conf.yml
+
+# エントリーポイント設定
+entryPoints:
+  web:
+    address: ":80"
+  websecure:
+    address: ":443"
+
+# アクセスログとエラーログ
+log:
+  level: INFO
+
+# Prometheusメトリクス
+metrics:
+  prometheus: {} 
