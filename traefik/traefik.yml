@@ -28,12 +28,13 @@ certificatesResolvers:
     acme:
       email: "${ACME_EMAIL}"  # 環境変数から取得
       storage: /etc/traefik/acme/acme.json
+      caServer: "https://acme-staging-v02.api.letsencrypt.org/directory" # ステージング環境
       httpChallenge:
         entryPoint: web
 
 # アクセスログとエラーログ
 log:
-  level: INFO
+  level: DEBUG  # より詳細なログを出力
 
 # Prometheusメトリクス
 metrics:
